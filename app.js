@@ -18,8 +18,10 @@
         var centerIndex = Math.floor(Math.random() * CatalogImage.allImages.length);
         var rightIndex = Math.floor(Math.random() * CatalogImage.allImages.length);
     
-        while (rightIndex === leftIndex && leftIndex == centerIndex && centerIndex == rightIndex) {
+        while (rightIndex === leftIndex || leftIndex == centerIndex || centerIndex == rightIndex) {
         rightIndex = Math.floor(Math.random() * CatalogImage.allImages.length);
+        leftIndex = Math.floor(Math.random() * CatalogImage.allImages.length);
+        centerIndex = Math.floor(Math.random() * CatalogImage.allImages.length);
         }
     
         var leftCatalog = CatalogImage.allImages[leftIndex];
@@ -42,7 +44,7 @@
         rightCatalog.timesShown++;
     }
     ////////////////////////////////////////////////////////////
-        function forEventListener(event) {
+        function imageGenerator(event) {
         for (var i = 0; i < CatalogImage.allImages.length; i++) {
         if (event.target.src.includes(CatalogImage.allImages[i].image)) {
             CatalogImage.allImages[i].timesClicked++;
@@ -54,11 +56,12 @@
         renderCatalog(randomCatalog[0], randomCatalog[1], randomCatalog[2])
         if (electionCounter == roundsLimit) {
             alert('That\'s ' + roundsLimit + ' Rounds of Voting!');
-            catalogContainer.removeEventListener('click', forEventListener);
+            catalogContainer.removeEventListener('click', imageGenerator);
         }
     }
     ////////////////////////////////////////////////////////////
         function displayList(){
+    
         var ul = document.createElement('ul');
         var h2 = document.createElement('h2');
         resultsDiv.appendChild(h2);
@@ -86,9 +89,6 @@
     var resultsDiv = document.getElementById('results');
 
 
-
-
-
     CatalogImage.allImages = [];  // Global Array
 
     // Creating Objects through Constructor
@@ -97,17 +97,15 @@
     console.log(CatalogImage.allImages);
     }
 
+    // Chooses randomly from the Global Image Array
     var randomCatalog = randomCatalogimg();
-
     renderCatalog(randomCatalog[0], randomCatalog[1], randomCatalog[2])
 
-    catalogContainer.addEventListener('click', forEventListener)
 
-
-    button.addEventListener('click', function (event){
-        console.log(event.target);
-        displayList();
-    });
+    // Voting Event
+    catalogContainer.addEventListener('click', imageGenerator)
+    //Results Event
+    button.addEventListener('click', displayList)
 
 
 
