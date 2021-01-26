@@ -33,7 +33,7 @@
         rightCatalog.timesShown++; // Counts & Logs Click
     }
     // Function to Vote on images
-        function imageGenerator(event) {
+    function imageGenerator(event) {
         for (var i = 0; i < CatalogImage.allImages.length; i++) {
         if (event.target.src.includes(CatalogImage.allImages[i].image)) {
             CatalogImage.allImages[i].timesClicked++;
@@ -49,16 +49,15 @@
         }
     }
     // Function to Display Images
-        function displayList(){
-    
+    function displayList(){
         var ul = document.createElement('ul');
         var h2 = document.createElement('h2');
-        resultsDiv.appendChild(h2);
-        resultsDiv.appendChild(ul);
-        for (var i = 0; i < CatalogImage.allImages.length; i++){
-        var li = document.createElement('li');
-        li.textContent = (CatalogImage.allImages[i].name + ' was shown ' + CatalogImage.allImages[i].timesShown + ' times, and was clicked on ' + CatalogImage.allImages[i].timesClicked + ' times.');
-        ul.appendChild(li);
+            resultsDiv.appendChild(h2);
+            resultsDiv.appendChild(ul);
+        for (var i = 0; i < CatalogImage.allImages.length; i++) {
+            var li = document.createElement('li');
+            li.textContent = (CatalogImage.allImages[i].name + ' was shown ' + CatalogImage.allImages[i].timesShown + ' times, and was clicked on ' + CatalogImage.allImages[i].timesClicked + ' times.');
+            ul.appendChild(li);
         }
     }
   // Global Variables
@@ -77,7 +76,7 @@
     // Creating Objects through Constructor
     for (var i = 0; i < imageStorage.length; i++) {
         new CatalogImage(imageStorage[i], catalogItem[i]);  
-    console.log(CatalogImage.allImages);
+        console.log(CatalogImage.allImages);
     }
     // Chooses randomly from the Global Image Array
     var randomCatalog = randomCatalogimg();
