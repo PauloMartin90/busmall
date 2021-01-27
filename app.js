@@ -1,6 +1,6 @@
 'use strict';
     ////// Image Poll Constructor 
-    function CatalogImage(image, name) {
+    function CatalogImage(image, name) {      // Main Constructor To make all Data
         this.name = name
         this.timesClicked = 0;
         this.timesShown = 0;
@@ -8,8 +8,27 @@
     CatalogImage.allImages.push(this); // Pushs into Global Array
     }
 
+    ////// Generates 3 random images 
+    function randomCatalogimg() {     // Interacts with Constructor CatalogImage
+        // Chooses Random Images from Array
+        var leftIndex = Math.floor(Math.random() * CatalogImage.allImages.length);
+        var centerIndex = Math.floor(Math.random() * CatalogImage.allImages.length);
+        var rightIndex = Math.floor(Math.random() * CatalogImage.allImages.length);
+            // Error Checker so that all Images are Unique
+            while (rightIndex === leftIndex || leftIndex == centerIndex || centerIndex == rightIndex) {
+                rightIndex = Math.floor(Math.random() * CatalogImage.allImages.length);
+                leftIndex = Math.floor(Math.random() * CatalogImage.allImages.length);
+                centerIndex = Math.floor(Math.random() * CatalogImage.allImages.length);
+            }
+        // Intiallizes Images to become objects and pass images to Variable
+        var leftCatalog = CatalogImage.allImages[leftIndex];
+        var centerCatalog = CatalogImage.allImages[centerIndex];
+        var rightCatalog = CatalogImage.allImages[rightIndex];
+    return [leftCatalog, centerCatalog, rightCatalog];
+    }
+
     ////// Chart Constructor
-    function chartGenerator(catalogItem, votesByProduct, timesProductsAreShow) {
+    function chartGenerator(catalogItem, votesByProduct, timesProductsAreShow) {      // Interacts with Function displayList
       var ctx = document.getElementById('myChart').getContext('2d');
 
         new Chart(ctx, {
@@ -144,27 +163,8 @@
         });
       }
       
-    ////// Generates 3 random images 
-    function randomCatalogimg() {
-        // Chooses Random Images from Array
-        var leftIndex = Math.floor(Math.random() * CatalogImage.allImages.length);
-        var centerIndex = Math.floor(Math.random() * CatalogImage.allImages.length);
-        var rightIndex = Math.floor(Math.random() * CatalogImage.allImages.length);
-            // Error Checker so that all Images are Unique
-            while (rightIndex === leftIndex || leftIndex == centerIndex || centerIndex == rightIndex) {
-                rightIndex = Math.floor(Math.random() * CatalogImage.allImages.length);
-                leftIndex = Math.floor(Math.random() * CatalogImage.allImages.length);
-                centerIndex = Math.floor(Math.random() * CatalogImage.allImages.length);
-            }
-        // Intiallizes Images to become objects and pass images to Variable
-        var leftCatalog = CatalogImage.allImages[leftIndex];
-        var centerCatalog = CatalogImage.allImages[centerIndex];
-        var rightCatalog = CatalogImage.allImages[rightIndex];
-    return [leftCatalog, centerCatalog, rightCatalog];
-    }
-
     ////// Function to Render Images on the page 
-    function renderCatalog(leftCatalog, centerCatalog, rightCatalog) {
+    function renderCatalog(leftCatalog, centerCatalog, rightCatalog) {      // Stand alone Function
             leftCatalogImage.src = leftCatalog.image; // Pulls the Source Image
             leftCatalog.timesShown++; // Counts & Logs Click
             centerCatalogImage.src = centerCatalog.image; // Pulls the Source Image
@@ -174,13 +174,20 @@
     }
 
     ///// Function to Start Election
-    function electionPeriod() {
-      var electionCounter = 1
+    function electionPeriod() {     // Interacts with function imageGenerator(event)
       var roundsLimit = 25
-      // Voting Period Rendering Images and creating a new image set // possibly move to it's own Function
+      var newRandomCatalog
+      var oldRandomCatalog
+
+      // Error Checking for Images to be Different
+      while(oldRandomCatalog === newRandomCatalog) {
+          newRandomCatalog = randomCatalogimg(); // Gives random arrray // Also a External Function is being used
+        }
+
+      renderCatalog(newRandomCatalog[0], newRandomCatalog[1], newRandomCatalog[2]) // Renders images to page
+      oldRandomCatalog = newRandomCatalog
       electionCounter++
-      randomCatalog = randomCatalogimg(); // Gives random arrray // Also a External Function is being used
-      renderCatalog(randomCatalog[0], randomCatalog[1], randomCatalog[2]) // Renders images to page
+      // Creates Condition Remove Listener
       if (electionCounter == roundsLimit) {
           alert('That\'s ' + roundsLimit + ' Rounds of Voting!');
           catalogContainer.removeEventListener('click', imageGenerator); // Removes Listner to Stop Voting
@@ -189,7 +196,7 @@
     }
 
     ////// Function to add property information
-    function imageGenerator(event) {
+    function imageGenerator(event) {      // Interacts with function electionPeriod
             for (var i = 0; i < CatalogImage.allImages.length; i++) {
                 if (event.target.src.includes(CatalogImage.allImages[i].image)) {
                     CatalogImage.allImages[i].timesClicked++;
@@ -200,7 +207,7 @@
     }
 
     ////// Function to Display Images
-    function displayList() {
+    function displayList() {      // Interacts with function chartGenerator
         var resultsDiv = document.getElementById('results');
         var ul = document.createElement('ul');
         var h2 = document.createElement('h2');
@@ -213,9 +220,9 @@
               ul.appendChild(li);
           }
 
-        var votesByProduct = [];
-        var timesProductsAreShow = [];
-    
+          //Initiates The arrays needed for chartGenerator Function
+          var votesByProduct = [];
+          var timesProductsAreShow = [];
         // Fills Array with Data
         for (var i = 0; i < CatalogImage.allImages.length; i++) {
             votesByProduct.push(CatalogImage.allImages[i].timesClicked);
@@ -233,6 +240,7 @@
     var centerCatalogImage = document.getElementById('catalog_2');
     var rightCatalogImage = document.getElementById('catalog_3');
     var button = document.getElementById('button');
+    var electionCounter = 1
 
 
     // Creates Array of Assets
@@ -260,4 +268,4 @@
 
 
 
-    
+  

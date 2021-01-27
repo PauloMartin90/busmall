@@ -1,6 +1,6 @@
 'use strict';
-    ////// Constructor 
-    function CatalogImage(image, name) {
+    ////// Image Poll Constructor 
+    function CatalogImage(image, name) {      // Main Constructor To make all Data
         this.name = name
         this.timesClicked = 0;
         this.timesShown = 0;
@@ -9,7 +9,7 @@
     }
 
     ////// Generates 3 random images 
-    function randomCatalogimg() {
+    function randomCatalogimg() {     // Interacts with Constructor CatalogImage
         // Chooses Random Images from Array
         var leftIndex = Math.floor(Math.random() * CatalogImage.allImages.length);
         var centerIndex = Math.floor(Math.random() * CatalogImage.allImages.length);
@@ -27,8 +27,144 @@
     return [leftCatalog, centerCatalog, rightCatalog];
     }
 
+    ////// Chart Constructor
+    function chartGenerator(catalogItem, votesByProduct, timesProductsAreShow) {      // Interacts with Function displayList
+      var ctx = document.getElementById('myChart').getContext('2d');
+
+        new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: catalogItem, // array of strings goes here
+            datasets: [{
+              label: 'times clicked',
+              data: votesByProduct, // array of numbers goes here
+              // data: votesByProduct,
+              backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+              ],
+              borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)',
+              ],
+              borderWidth: 1
+            },
+            {
+              label: 'times Shows',
+              data: timesProductsAreShow,
+              backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+              ],
+              borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+              ],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              yAxes: [{
+                ticks: {
+                  beginAtZero: true
+                }
+              }]
+            }
+          }
+        });
+      }
+      
     ////// Function to Render Images on the page 
-    function renderCatalog(leftCatalog, centerCatalog, rightCatalog) {
+    function renderCatalog(leftCatalog, centerCatalog, rightCatalog) {      // Stand alone Function
             leftCatalogImage.src = leftCatalog.image; // Pulls the Source Image
             leftCatalog.timesShown++; // Counts & Logs Click
             centerCatalogImage.src = centerCatalog.image; // Pulls the Source Image
@@ -36,38 +172,64 @@
             rightCatalogImage.src = rightCatalog.image; // Pulls the Source Image
             rightCatalog.timesShown++; // Counts & Logs Click
     }
-    
-    ////// Function to Vote on images 
-    function imageGenerator(event) {
+
+    ///// Function to Start Election
+    function electionPeriod() {     // Interacts with function imageGenerator(event)
+      var roundsLimit = 25
+      var newRandomCatalog
+      var oldRandomCatalog
+      // Error Checking for Different Images
+      while(oldRandomCatalog === newRandomCatalog){
+          newRandomCatalog = randomCatalogimg(); // Gives random arrray // Also a External Function is being used
+        }
+      renderCatalog(newRandomCatalog[0], newRandomCatalog[1], newRandomCatalog[2]) // Renders images to page
+      oldRandomCatalog = newRandomCatalog
+      electionCounter++
+      console.log(electionCounter)
+      if (electionCounter == roundsLimit) {
+          alert('That\'s ' + roundsLimit + ' Rounds of Voting!');
+          catalogContainer.removeEventListener('click', imageGenerator); // Removes Listner to Stop Voting
+          console.log(CatalogImage.allImages)
+        }
+    }
+
+    ////// Function to add property information
+    function imageGenerator(event) {      // Interacts with function electionPeriod
             for (var i = 0; i < CatalogImage.allImages.length; i++) {
                 if (event.target.src.includes(CatalogImage.allImages[i].image)) {
                     CatalogImage.allImages[i].timesClicked++;
                     // console.log(CatalogImage.allImages[i])
-            } 
-        }
-        // Voting Period Rendering Images and creating a new im
-        electionCounter++
-        randomCatalog = randomCatalogimg(); // Gives random arrray // Also a External Function is being used
-        renderCatalog(randomCatalog[0], randomCatalog[1], randomCatalog[2]) // Renders images to page
-        if (electionCounter == roundsLimit) {
-            alert('That\'s ' + roundsLimit + ' Rounds of Voting!');
-            catalogContainer.removeEventListener('click', imageGenerator); // Removes Listner to Stop Voting
-        }
+                } 
+              }
+      electionPeriod() // Detangle Some how
     }
 
-    ////// Function to Display Images 
-    function displayList(){
+    ////// Function to Display Images
+    function displayList() {      // Interacts with function chartGenerator
+        var resultsDiv = document.getElementById('results');
         var ul = document.createElement('ul');
         var h2 = document.createElement('h2');
             resultsDiv.appendChild(h2);
             resultsDiv.appendChild(ul);
+
         for (var i = 0; i < CatalogImage.allImages.length; i++) {
-            var li = document.createElement('li');
-            li.textContent = (CatalogImage.allImages[i].name + ' was shown ' + CatalogImage.allImages[i].timesShown + ' times, and was clicked on ' + CatalogImage.allImages[i].timesClicked + ' times.');
-            ul.appendChild(li);
+              var li = document.createElement('li');
+              li.textContent = (CatalogImage.allImages[i].name + ' was shown ' + CatalogImage.allImages[i].timesShown + ' times, and was clicked on ' + CatalogImage.allImages[i].timesClicked + ' times.');
+              ul.appendChild(li);
+          }
+
+          //Initiates The arrays needed for chartGenerator Function
+          var votesByProduct = [];
+          var timesProductsAreShow = [];
+        // Fills Array with Data
+        for (var i = 0; i < CatalogImage.allImages.length; i++) {
+            votesByProduct.push(CatalogImage.allImages[i].timesClicked);
+            timesProductsAreShow.push(CatalogImage.allImages[i].timesShown);
         }
+  
+      chartGenerator(catalogItem, votesByProduct, timesProductsAreShow) // Calls Function chartGenerator(object_property_1, object_property_2, object_property_3)
     }
-    
+        
   // Global Variables
   var imageStorage = ['img/bag.jpg', 'img/banana.jpg', 'img/bathroom.jpg', 'img/boots.jpg', 'img/breakfast.jpg', 'img/bubblegum.jpg', 'img/chair.jpg', 'img/cthulhu.jpg', 'img/dog-duck.jpg', 'img/dragon.jpg', 'img/pen.jpg', 'img/pet-sweep.jpg', 'img/scissors.jpg', 'img/shark.jpg', 'img/sweep.png', 'img/tauntaun.jpg', 'img/unicorn.jpg', 'img/usb.gif','img/water-can.jpg', 'img/wine-glass.jpg']
   var catalogItem = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'sweep', 'tauntaun', 'unicorn', 'usb', 'water-can', 'wine-glass'];
@@ -75,16 +237,16 @@
     var leftCatalogImage = document.getElementById('catalog_1');
     var centerCatalogImage = document.getElementById('catalog_2');
     var rightCatalogImage = document.getElementById('catalog_3');
-    var electionCounter = 1
-    var roundsLimit = 25
     var button = document.getElementById('button');
-    var resultsDiv = document.getElementById('results');
+    var electionCounter = 1
+
+
     // Creates Array of Assets
     CatalogImage.allImages = [];  // Global Array
     // Creating Objects through Constructor
     for (var i = 0; i < imageStorage.length; i++) {
         new CatalogImage(imageStorage[i], catalogItem[i]);  
-        console.log(CatalogImage.allImages);
+        // console.log(CatalogImage.allImages);
     }
     // Chooses randomly from the Global Image Array
     var randomCatalog = randomCatalogimg();
@@ -93,3 +255,15 @@
     catalogContainer.addEventListener('click', imageGenerator)
     //Results Event
     button.addEventListener('click', displayList)
+  
+
+
+
+
+
+
+
+
+
+
+  
