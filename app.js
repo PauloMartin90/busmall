@@ -30,8 +30,7 @@
     ////// Chart Constructor
     function chartGenerator(catalogItem, votesByProduct, timesProductsAreShow) {      // Interacts with Function displayList
       var ctx = document.getElementById('myChart').getContext('2d');
-
-        new Chart(ctx, {
+        new Chart(ctx, {      // Chart constructor API
           type: 'bar',
           data: {
             labels: catalogItem, // array of strings goes here
@@ -173,28 +172,6 @@
             rightCatalog.timesShown++; // Counts & Logs Click
     }
 
-    ///// Function to Start Election
-    function electionPeriod() {     // Interacts with function imageGenerator(event)
-      var roundsLimit = 25
-      var newRandomCatalog
-      var oldRandomCatalog
-
-      // Error Checking for Images to be Different
-      while(oldRandomCatalog === newRandomCatalog) {
-          newRandomCatalog = randomCatalogimg(); // Gives random arrray // Also a External Function is being used
-        }
-
-      renderCatalog(newRandomCatalog[0], newRandomCatalog[1], newRandomCatalog[2]) // Renders images to page
-      oldRandomCatalog = newRandomCatalog
-      electionCounter++
-      // Creates Condition Remove Listener
-      if (electionCounter == roundsLimit) {
-          alert('That\'s ' + roundsLimit + ' Rounds of Voting!');
-          catalogContainer.removeEventListener('click', imageGenerator); // Removes Listner to Stop Voting
-          console.log(CatalogImage.allImages)
-        }
-    }
-
     ////// Function to add property information
     function imageGenerator(event) {      // Interacts with function electionPeriod
             for (var i = 0; i < CatalogImage.allImages.length; i++) {
@@ -206,6 +183,29 @@
       electionPeriod() // Detangle Some how
     }
 
+    ///// Function to Start Election
+    function electionPeriod() {     // Interacts with function imageGenerator(event)
+      var roundsLimit = 25
+      var oldRandomCatalog = randomCatalog
+      randomCatalog = randomCatalogimg()
+       // Error Checking for Images to be Different
+      for (var i = 0; i < randomCatalog.length; i++) {
+        while(oldRandomCatalog[0] === randomCatalog[i] || oldRandomCatalog[1] === randomCatalog[i] || oldRandomCatalog[2] === randomCatalog[i]) {
+            randomCatalog[i] = randomCatalogimg()[i]; // Gives random arrray // Also a External Function is being used
+          }
+      }
+      renderCatalog(randomCatalog[0], randomCatalog[1], randomCatalog[2]) // Renders images to page
+      electionCounter++
+
+      // Creates Condition Remove Listener
+      if (electionCounter == roundsLimit) {
+          alert('That\'s ' + roundsLimit + ' Rounds of Voting!');
+          catalogContainer.removeEventListener('click', imageGenerator); // Removes Listner to Stop Voting
+          console.log(CatalogImage.allImages)
+        }
+    }
+
+  
     ////// Function to Display Images
     function displayList() {      // Interacts with function chartGenerator
         var resultsDiv = document.getElementById('results');
@@ -219,7 +219,6 @@
               li.textContent = (CatalogImage.allImages[i].name + ' was shown ' + CatalogImage.allImages[i].timesShown + ' times, and was clicked on ' + CatalogImage.allImages[i].timesClicked + ' times.');
               ul.appendChild(li);
           }
-
           //Initiates The arrays needed for chartGenerator Function
           var votesByProduct = [];
           var timesProductsAreShow = [];
@@ -228,7 +227,6 @@
             votesByProduct.push(CatalogImage.allImages[i].timesClicked);
             timesProductsAreShow.push(CatalogImage.allImages[i].timesShown);
         }
-  
       chartGenerator(catalogItem, votesByProduct, timesProductsAreShow) // Calls Function chartGenerator(object_property_1, object_property_2, object_property_3)
     }
         
@@ -247,8 +245,7 @@
     CatalogImage.allImages = [];  // Global Array
     // Creating Objects through Constructor
     for (var i = 0; i < imageStorage.length; i++) {
-        new CatalogImage(imageStorage[i], catalogItem[i]);  
-        // console.log(CatalogImage.allImages);
+        new CatalogImage(imageStorage[i], catalogItem[i]); 
     }
     // Chooses randomly from the Global Image Array
     var randomCatalog = randomCatalogimg();
@@ -257,15 +254,3 @@
     catalogContainer.addEventListener('click', imageGenerator)
     //Results Event
     button.addEventListener('click', displayList)
-  
-
-
-
-
-
-
-
-
-
-
-  
