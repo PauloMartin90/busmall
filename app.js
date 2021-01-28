@@ -186,26 +186,57 @@
     ///// Function to Start Election
     function electionPeriod() {     // Interacts with function imageGenerator(event)
       var roundsLimit = 25
-      var oldRandomCatalog = randomCatalog
-      randomCatalog = randomCatalogimg()
+      var newRandomCatalog = randomCatalogimg()
        // Error Checking for Images to be Different
-      for (var i = 0; i < randomCatalog.length; i++) {
-        while(oldRandomCatalog[0] === randomCatalog[i] || oldRandomCatalog[1] === randomCatalog[i] || oldRandomCatalog[2] === randomCatalog[i]) {
-            randomCatalog[i] = randomCatalogimg()[i]; // Gives random arrray // Also a External Function is being used
-          }
-      }
-      renderCatalog(randomCatalog[0], randomCatalog[1], randomCatalog[2]) // Renders images to page
-      electionCounter++
+      //  console.log(newRandomCatalog)
+          for (var i = 0; i < randomCatalog.length; i++) {
+            while(randomCatalog[i].name === newRandomCatalog[0].name || randomCatalog[i].name === newRandomCatalog[1].name || randomCatalog[i].name === newRandomCatalog[2].name) {
+              console.log("This is the image you are looking at:  ",randomCatalog[i].name)  
+              console.log("These are the 3 images you have:  ")
+              console.log(newRandomCatalog[0].name)
+              console.log(newRandomCatalog[1].name)
+              console.log(newRandomCatalog[2].name)
+              console.log("////////////////////////////  WARNING  /////////////////////////////")
+              console.log("////                THESE ARE YOUR LOGIC RESULTS                ////")
+              console.log("////                                                            ////")
+              console.log("////            TEST FAILED:  ", randomCatalog[i].name === newRandomCatalog[0].name, randomCatalog[i].name === newRandomCatalog[1].name, randomCatalog[i].name === newRandomCatalog[2].name, "                ////")
+              console.log("////    WARNING: One of you images are the same as the other    ////")
+              console.log("////////////////////////////////////////////////////////////////////")
+              
+              var imageContainer = randomCatalogimg(); // Gives random arrray // Also a External Function is being used
+              newRandomCatalog[i] = imageContainer[i]
+              console.log(imageContainer[i])
 
+
+              console.log("GENERATING NEW IMAGES TO REPLACE TRUE STATMENT")
+              console.log("what is the old image 0:  ",randomCatalog[i].name)  
+              console.log("These are the 3 new images because you failed the logic test:  ")
+              console.log(newRandomCatalog[0].name)
+              console.log(newRandomCatalog[1].name)
+              console.log(newRandomCatalog[2].name)
+              console.log("This is iteration: ", i)
+              console.log("Congrats These Names are different")
+              console.log("Old --> New: ", randomCatalog[0].name, "--->" , newRandomCatalog[0].name)
+              console.log("Old --> New: ", randomCatalog[1].name, "--->" , newRandomCatalog[1].name)
+              console.log("Old --> New: ", randomCatalog[2].name, "--->" , newRandomCatalog[2].name)
+
+
+            }
+
+          }
+
+      randomCatalog = newRandomCatalog
+      renderCatalog(newRandomCatalog[0], newRandomCatalog[1], newRandomCatalog[2]) // Renders images to page
+      electionCounter++
       // Creates Condition Remove Listener
       if (electionCounter == roundsLimit) {
           alert('That\'s ' + roundsLimit + ' Rounds of Voting!');
           catalogContainer.removeEventListener('click', imageGenerator); // Removes Listner to Stop Voting
           console.log(CatalogImage.allImages)
         }
+
     }
 
-  
     ////// Function to Display Images
     function displayList() {      // Interacts with function chartGenerator
         var resultsDiv = document.getElementById('results');

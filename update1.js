@@ -1,153 +1,175 @@
 'use strict';
+  
+    // Global Variables
+    var imageStorage = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfast.jpg', 'bubblegum.jpg', 'chair.jpg', 'cthulhu.jpg', 'dog-duck.jpg', 'dragon.jpg', 'pen.jpg', 'pet-sweep.jpg', 'scissors.jpg', 'shark.jpg', 'sweep.png', 'tauntaun.jpg', 'unicorn.jpg', 'usb.gif','water-can.jpg', 'wine-glass.jpg']
+    
+    var catalogContainer = document.getElementById('catalog-container');
+    var leftCatalogImage = document.getElementById('catalog_1');
+    var centerCatalogImage = document.getElementById('catalog_2');
+    var rightCatalogImage = document.getElementById('catalog_3');
+    var imageSource = [leftCatalogImage, centerCatalogImage, rightCatalogImage]
+
+    var resultsDiv = document.getElementById('results');
+    var ulElement = document.createElement('ul');
+    var h2Element = document.createElement('h2');
+    var button = document.getElementById('button');
+    var electionCounter = 1
+    var oldRandomCatalog = []
+    var newGlobalImage
+    var roundsLimit = 100
+
     ////// Image Poll Constructor 
-    function CatalogImage(image, name) {      // Main Constructor To make all Data
-        this.name = name
+    function CatalogImage(name) {      // Main Constructor To make all Data
+        this.name = name.substring(0, name.length - 4)
         this.timesClicked = 0;
         this.timesShown = 0;
-        this.image = image;
+        this.rating = 0;
+        this.image = `img/${name}`;
     CatalogImage.allImages.push(this); // Pushs into Global Array
     }
 
     ////// Generates 3 random images 
     function randomCatalogimg() {     // Interacts with Constructor CatalogImage
         // Chooses Random Images from Array
-        var leftIndex = Math.floor(Math.random() * CatalogImage.allImages.length);
-        var centerIndex = Math.floor(Math.random() * CatalogImage.allImages.length);
-        var rightIndex = Math.floor(Math.random() * CatalogImage.allImages.length);
-            // Error Checker so that all Images are Unique
-            while (rightIndex === leftIndex || leftIndex == centerIndex || centerIndex == rightIndex) {
-                rightIndex = Math.floor(Math.random() * CatalogImage.allImages.length);
-                leftIndex = Math.floor(Math.random() * CatalogImage.allImages.length);
-                centerIndex = Math.floor(Math.random() * CatalogImage.allImages.length);
-            }
-        // Intiallizes Images to become objects and pass images to Variable
-        var leftCatalog = CatalogImage.allImages[leftIndex];
-        var centerCatalog = CatalogImage.allImages[centerIndex];
-        var rightCatalog = CatalogImage.allImages[rightIndex];
-    return [leftCatalog, centerCatalog, rightCatalog];
+        var indexImage = Math.floor(Math.random() * CatalogImage.allImages.length);
+        var imageCatalog = CatalogImage.allImages[indexImage];
+    return imageCatalog
     }
 
-    ////// Chart Constructor
-    function chartGenerator(catalogItem, votesByProduct, timesProductsAreShow) {      // Interacts with Function displayList
-      var ctx = document.getElementById('myChart').getContext('2d');
+    ////// Function to Render Images on the page 
+    function renderCatalog(testImage) {      // Stand alone Function
+            for (var i = 0; i < testImage.length; i++){
+            imageSource[i].src = testImage[i].image; // Pulls the Source Image
+            testImage[i].timesShown++; // Counts & Logs Click
+            }
+          }
 
-        new Chart(ctx, {
+    ///// Error Checker Function
+    function randomImageChecker (newArray, oldArray) {
+      for (var i = 0; i < newArray.length; i++) {
+        while(newArray[i].name === oldArray[0].name || newArray[i].name === oldArray[0].name || newArray[i].name === oldArray[0].name) {
+          newArray[i] = randomCatalogimg(); // Gives random arrray // Also a External Function is being used
+          console.log(newArray)
+      }
+    }
+    return newArray
+    }
+    ////// Function to add property information
+    function clickLogger(event) {      // Interacts with function electionPeriod
+        for (var i = 0; i < CatalogImage.allImages.length; i++) {
+            if (event.target.src.includes(CatalogImage.allImages[i].image)) {
+                CatalogImage.allImages[i].timesClicked++;
+                // console.log(CatalogImage.allImages[i])
+            } 
+          }
+          electionPeiod()
+    }
+
+    ///// Function to Start Election
+    function electionPeiod() {     // Interacts with function imageGenerator(event)
+          var newRandomCatalog = []
+          for (var i = 0; i < imageSource.length; i++){
+                  newGlobalImage = randomCatalogimg();
+                  newRandomCatalog.push(newGlobalImage)
+              }
+            // random Checker
+            newRandomCatalog = randomImageChecker(newRandomCatalog, oldRandomCatalog)
+            oldRandomCatalog = newRandomCatalog
+
+            renderCatalog(newRandomCatalog)
+            // randomImageChecker(randomCatalog)  
+            electionCounter++
+            // Creates Condition Remove Listener
+            if (electionCounter == roundsLimit) {
+                alert('That\'s ' + roundsLimit + ' Rounds of Voting!');
+                catalogContainer.removeEventListener('click', imageGenerator); // Removes Listner to Stop Voting
+                console.log(CatalogImage.allImages)
+              }
+              storeCatalogData('product', CatalogImage.allImages)
+              topCatalogItems()
+              ratingCalculator()
+    }
+
+    ////// Function to Display Images
+    function displayList() {      // Interacts with function chartGenerator
+            resultsDiv.appendChild(h2);
+            h2Element.appendChild(ul);
+
+        for (var i = 0; i < CatalogImage.allImages.length; i++) {
+              var liElement = document.createElement('li');
+              liElement.textContent = (CatalogImage.allImages[i].name + ' was shown ' + CatalogImage.allImages[i].timesShown + ' times, and was clicked on ' + CatalogImage.allImages[i].timesClicked + ' times.');
+              ulElement.appendChild(li);
+          }
+  
+    }
+        
+    ////// Top Catalog Choice
+    function topCatalogItems() {
+    var listOfCatalog = fetchCatalogData('product')
+    var topCatalogItem = listOfCatalog[0]
+    fetchCatalogData('Top Catalog Item')
+    for (var i = 0; i < listOfCatalog.length; i++) {
+      if (topCatalogItem.timesClicked < listOfCatalog[i].timesClicked) {
+          topCatalogItem = listOfCatalog[i]
+      }
+    }
+    var stringObject = JSON.stringify(topCatalogItem)
+    localStorage.setItem('Top Catalog Item', stringObject);
+    }
+
+    ///// Rating Function
+    function ratingCalculator() {
+      var listOfCatalog = fetchCatalogData('product')
+      for (var i=0; i < listOfCatalog.length; i++) {
+        var ratingCatalogItem = listOfCatalog[i].timesClicked/listOfCatalog[i].timesShown
+        listOfCatalog[i].rating = Math.round(ratingCatalogItem)
+      }
+      storeCatalogData('product', listOfCatalog)
+    }
+
+    ///// Stores Catalog Information
+    function storeCatalogData(categoryName, object){//stores all objects states in local storage as a string
+      var stringObject = JSON.stringify(object);
+      localStorage.setItem(categoryName, stringObject);
+    }
+
+    ///// Fetchs Catalog Infromation
+    function fetchCatalogData(categoryName){//converts all objects (which are stored as one long string) back into actual objects.
+      var reObjectify = localStorage.getItem(categoryName);
+      var productsFromStorage = JSON.parse(reObjectify);
+      return productsFromStorage;
+    }
+
+ ////// Chart Constructor
+    function chartGenerator() {      // Interacts with Function displayList
+        
+      //Initiates The arrays needed for chartGenerator Function
+        var productsNames = [] 
+        var votesByProduct = [];
+        var timesProductsAreShow = [];
+       // Fills Array with Data
+       for (var i = 0; i < CatalogImage.allImages.length; i++) {
+          productsNames.push(CatalogImage.allImages[i].name);
+          votesByProduct.push(CatalogImage.allImages[i].timesClicked);
+          timesProductsAreShow.push(CatalogImage.allImages[i].timesShown);
+       }
+     
+      var ctx = document.getElementById('myChart').getContext('2d');
+        new Chart(ctx, {      // Chart constructor API
           type: 'bar',
           data: {
-            labels: catalogItem, // array of strings goes here
+            labels: productsNames, // array of strings goes here
             datasets: [{
               label: 'times clicked',
               data: votesByProduct, // array of numbers goes here
               // data: votesByProduct,
-              backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)',
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)',
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)',
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-              ],
-              borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)',
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)',
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)',
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)',
-              ],
+              backgroundColor: new Array(12).fill('rgba(255, 99, 132, 1)'),
               borderWidth: 1
             },
             {
               label: 'times Shows',
               data: timesProductsAreShow,
-              backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)',
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)',
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)',
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-              ],
-              borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)',
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)',
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)',
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-              ],
+              backgroundColor: new Array(12).fill('rgba(54, 162, 235, 1)'),
               borderWidth: 1
             }]
           },
@@ -162,108 +184,23 @@
           }
         });
       }
-      
-    ////// Function to Render Images on the page 
-    function renderCatalog(leftCatalog, centerCatalog, rightCatalog) {      // Stand alone Function
-            leftCatalogImage.src = leftCatalog.image; // Pulls the Source Image
-            leftCatalog.timesShown++; // Counts & Logs Click
-            centerCatalogImage.src = centerCatalog.image; // Pulls the Source Image
-            centerCatalog.timesShown++; // Counts & Logs Click
-            rightCatalogImage.src = rightCatalog.image; // Pulls the Source Image
-            rightCatalog.timesShown++; // Counts & Logs Click
-    }
 
-    ///// Function to Start Election
-    function electionPeriod() {     // Interacts with function imageGenerator(event)
-      var roundsLimit = 25
-      var newRandomCatalog
-      var oldRandomCatalog
-      // Error Checking for Different Images
-      while(oldRandomCatalog === newRandomCatalog){
-          newRandomCatalog = randomCatalogimg(); // Gives random arrray // Also a External Function is being used
-        }
-      renderCatalog(newRandomCatalog[0], newRandomCatalog[1], newRandomCatalog[2]) // Renders images to page
-      oldRandomCatalog = newRandomCatalog
-      electionCounter++
-      console.log(electionCounter)
-      if (electionCounter == roundsLimit) {
-          alert('That\'s ' + roundsLimit + ' Rounds of Voting!');
-          catalogContainer.removeEventListener('click', imageGenerator); // Removes Listner to Stop Voting
-          console.log(CatalogImage.allImages)
-        }
-    }
+    // Creates Array of Data or if existing nothing
+    CatalogImage.allImages = fetchCatalogData() || [];
 
-    ////// Function to add property information
-    function imageGenerator(event) {      // Interacts with function electionPeriod
-            for (var i = 0; i < CatalogImage.allImages.length; i++) {
-                if (event.target.src.includes(CatalogImage.allImages[i].image)) {
-                    CatalogImage.allImages[i].timesClicked++;
-                    // console.log(CatalogImage.allImages[i])
-                } 
-              }
-      electionPeriod() // Detangle Some how
-    }
-
-    ////// Function to Display Images
-    function displayList() {      // Interacts with function chartGenerator
-        var resultsDiv = document.getElementById('results');
-        var ul = document.createElement('ul');
-        var h2 = document.createElement('h2');
-            resultsDiv.appendChild(h2);
-            resultsDiv.appendChild(ul);
-
-        for (var i = 0; i < CatalogImage.allImages.length; i++) {
-              var li = document.createElement('li');
-              li.textContent = (CatalogImage.allImages[i].name + ' was shown ' + CatalogImage.allImages[i].timesShown + ' times, and was clicked on ' + CatalogImage.allImages[i].timesClicked + ' times.');
-              ul.appendChild(li);
-          }
-
-          //Initiates The arrays needed for chartGenerator Function
-          var votesByProduct = [];
-          var timesProductsAreShow = [];
-        // Fills Array with Data
-        for (var i = 0; i < CatalogImage.allImages.length; i++) {
-            votesByProduct.push(CatalogImage.allImages[i].timesClicked);
-            timesProductsAreShow.push(CatalogImage.allImages[i].timesShown);
-        }
-  
-      chartGenerator(catalogItem, votesByProduct, timesProductsAreShow) // Calls Function chartGenerator(object_property_1, object_property_2, object_property_3)
-    }
-        
-  // Global Variables
-  var imageStorage = ['img/bag.jpg', 'img/banana.jpg', 'img/bathroom.jpg', 'img/boots.jpg', 'img/breakfast.jpg', 'img/bubblegum.jpg', 'img/chair.jpg', 'img/cthulhu.jpg', 'img/dog-duck.jpg', 'img/dragon.jpg', 'img/pen.jpg', 'img/pet-sweep.jpg', 'img/scissors.jpg', 'img/shark.jpg', 'img/sweep.png', 'img/tauntaun.jpg', 'img/unicorn.jpg', 'img/usb.gif','img/water-can.jpg', 'img/wine-glass.jpg']
-  var catalogItem = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'sweep', 'tauntaun', 'unicorn', 'usb', 'water-can', 'wine-glass'];
-    var catalogContainer = document.getElementById('catalog-container');
-    var leftCatalogImage = document.getElementById('catalog_1');
-    var centerCatalogImage = document.getElementById('catalog_2');
-    var rightCatalogImage = document.getElementById('catalog_3');
-    var button = document.getElementById('button');
-    var electionCounter = 1
-
-
-    // Creates Array of Assets
-    CatalogImage.allImages = [];  // Global Array
     // Creating Objects through Constructor
     for (var i = 0; i < imageStorage.length; i++) {
-        new CatalogImage(imageStorage[i], catalogItem[i]);  
-        // console.log(CatalogImage.allImages);
+        new CatalogImage(imageStorage[i]); 
     }
     // Chooses randomly from the Global Image Array
-    var randomCatalog = randomCatalogimg();
-    renderCatalog(randomCatalog[0], randomCatalog[1], randomCatalog[2])
+    for (var i = 0; i < imageSource.length; i++){
+      newGlobalImage = randomCatalogimg();
+      oldRandomCatalog.push(newGlobalImage)
+    }
+    renderCatalog(oldRandomCatalog)
+    
+
     // Voting Event
-    catalogContainer.addEventListener('click', imageGenerator)
+    catalogContainer.addEventListener('click', clickLogger)
     //Results Event
     button.addEventListener('click', displayList)
-  
-
-
-
-
-
-
-
-
-
-
-  
